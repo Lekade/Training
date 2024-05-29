@@ -23,7 +23,23 @@ export const GlobalStyles = createGlobalStyle`
     height: 100%;
     font-size: calc(100vw/1920*10);
   }
-  
+
+  @media (max-width: 1440px) {
+    html {
+      font-size: calc(100vw/1440*10);
+    }
+  }
+  @media (max-width: 760px) {
+    html {
+      font-size: calc(100vw/760*10);
+    }
+  }
+  @media (max-width: 500px) {
+    html {
+      font-size: calc(100vw/500*10);
+    }
+  }
+    
   .wrapper{
     min-height:100vh;
     position: relative;
