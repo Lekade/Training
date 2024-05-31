@@ -1,33 +1,41 @@
-import React from 'react';
-import {FilterValuesType} from './FiterTodolist';
+import React, {ChangeEvent, useState} from 'react';
+import {FilterValuesType} from './TodolistApp';
 
 type TaskType = {
-    id: number
+    id: string
     title: string
     isDone: boolean
 }
 
-type PropsType = {
+type TodolistPropsType = {
     title: string
     tasks: Array<TaskType>
-    removeTask: (taskId: number) => void
+    removeTask: (taskId: string) => void
     removeAllTasks: () => void
     changeFilter: (value: FilterValuesType) => void
+    addNewTask: (inputValue: string) => void
 }
 
-export function Todolist(props: PropsType) {
+export function Todolist(props: TodolistPropsType) {
+
+    const [inputValue, setInputValue] = useState('')
+
+    const changeInputValue = (e:ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.currentTarget.value)
+    }
+
     return <div>
         <h3>{props.title}</h3>
         <div>
-            <input/>
-            <button>+</button>
+            <input onChange={changeInputValue} value={inputValue}/>
+            <button onClick={() => props.addNewTask(inputValue)}>+</button>
         </div>
         <ul>
             {
                 props.tasks.map(t => <li key={t.id}>
                     <input type="checkbox" checked={t.isDone}/>
                     <span>{t.title}</span>
-                    <button onClick={ () => { props.removeTask(t.id) } }>x</button>
+                    <button onClick={() => props.removeTask(t.id)}>x</button>
                 </li>)
             }
         </ul>
@@ -73,7 +81,7 @@ export function Todolist(props: PropsType) {
 //------------------------------------------------------------------------------------------------
 //
 // import React, {useState} from 'react';
-// import {FilterValuesType} from './FiterTodolist';
+// import {FilterValuesType} from './TodolistApp';
 //
 // type TaskType = {
 //     id: number
