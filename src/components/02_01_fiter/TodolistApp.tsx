@@ -21,7 +21,7 @@ const TodolistApp = () => {
             title: newTaskTitle,
             isDone: false
         }
-        setTasks([...tasks, newTask])
+        setTasks([newTask,...tasks])
 
     }
 

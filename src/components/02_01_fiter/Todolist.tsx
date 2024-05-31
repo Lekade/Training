@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {FilterValuesType} from './TodolistApp';
 
 type TaskType = {
@@ -24,16 +24,27 @@ export function Todolist(props: TodolistPropsType) {
         setInputValue(e.currentTarget.value)
     }
 
+    const addTask = () => {
+        props.addNewTask(inputValue)
+        setInputValue('')
+    }
+
+    const onInputKeyDown = (e:KeyboardEvent<HTMLInputElement>) => {
+        if(e.key === "Enter"){
+            addTask()
+        }
+    }
+
     return <div>
         <h3>{props.title}</h3>
         <div>
-            <input onChange={changeInputValue} value={inputValue}/>
-            <button onClick={() => props.addNewTask(inputValue)}>+</button>
+            <input value={inputValue} onChange={changeInputValue} onKeyDown={onInputKeyDown}/>
+            <button onClick={addTask}>+</button>
         </div>
         <ul>
             {
                 props.tasks.map(t => <li key={t.id}>
-                    <input type="checkbox" checked={t.isDone}/>
+                    <input type="checkbox" onChange={() => {}} checked={t.isDone}/>
                     <span>{t.title}</span>
                     <button onClick={() => props.removeTask(t.id)}>x</button>
                 </li>)
