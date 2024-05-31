@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const SectionCards = styled.section`
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  padding-bottom: 100px ;
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
