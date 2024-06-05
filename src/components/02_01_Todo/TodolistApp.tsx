@@ -24,6 +24,11 @@ const TodolistApp = () => {
         setTasks([newTask,...tasks])
 
     }
+    function changeStatusTask (idTask: string, isDone: boolean){
+        const selectedTask = tasks.find(t => t.id === idTask)
+        selectedTask && (selectedTask.isDone = isDone)
+        setTasks([...tasks])
+    }
 
     function removeTask(id: string) {
         let filteredTasks = tasks.filter(t => t.id !== id);
@@ -57,6 +62,8 @@ const TodolistApp = () => {
                       changeFilter={changeFilter}
                       removeAllTasks={removeAllTasks}
                       addNewTask={addNewTask}
+                      changeStatusTask={changeStatusTask}
+                      activeFilter={filter}
 
             />
 
