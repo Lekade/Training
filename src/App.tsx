@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
-import Cards from "./components/00_cards/Cards";
-import {Task_Filter} from "./components/01_01_tasks/Task&Filter";
-import FilterTodolist from './components/02_01_Todo/TodolistApp'
-import {IndicationButton} from "./components/02_01_Todo/IndicationButton";
+import Cards from "./components/cards/Cards";
+import {Task_Filter} from "./components/tasks/Task&Filter";
+import FilterTodolist from './components/todo/TodolistApp'
+import {IndicationButton} from "./components/todo/IndicationButton";
+import Stars from "./components/stars/Stars";
 
 
 
@@ -14,6 +15,14 @@ function App() {
             <Task_Filter/>
             <FilterTodolist/>
             <IndicationButton/>
+            <div>
+                <Stars initialData={1}/>
+                <Stars initialData={2}/>
+                <Stars initialData={3}/>
+                <Stars initialData={4}/>
+                <Stars initialData={5}/>
+            </div>
+
         </div>
     </div>
 }
