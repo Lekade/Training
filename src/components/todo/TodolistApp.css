@@ -1,13 +1,4 @@
 
-.filterTodo {
-  padding: 30px;
-  display: flex;
-}
-
-.filterTodo > div {
-  margin-right: 50px;
-}
-
 .error {
   border: red 1px solid;
 }
