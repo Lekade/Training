@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import './TodolistApp.css';
 import {TaskType, Todolist} from './Todolist';
 import {v1} from "uuid";
+import AddItemForm from "./addItemForm/AddItemForm";
+import styled from "styled-components";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
@@ -57,26 +59,82 @@ const TodolistApp = () => {
     function changeFilter(value:FilterValuesType, todolistId:string){
         setTodoList(todoList.map(tl => tl.todolistId === todolistId ? {...tl, filter: value} : tl))
     }
+    function addTodolist(inputValue:string)  {
+        const todolistItem :TodoType = {
+            todolistId: v1(), title: inputValue, filter: 'all',  tasks: []
+        }
+        setTodoList([...todoList, todolistItem])
+    }
+    function deleteTodolist(todolistId: string){
+        setTodoList(todoList.filter(tl => tl.todolistId !== todolistId))
+    }
+    function changeTitleTodolist(title:string, todolistId: string){
+        setTodoList(todoList.map(tl => tl.todolistId === todolistId ? {...tl, title: title} : tl))
+    }
+    function changeTitleTask(title:string, idTask: string, todolistId: string){
+        setTodoList(todoList.map(tl => tl.todolistId === todolistId
+            ? {...tl, tasks: tl.tasks.map(task => task.idTask === idTask
+                    ? {...task, title:title}: task)}: tl))
+    }
 
     return (
-        <div className="filterTodo">
-            {
-                todoList.map(tl => {
-                    return <Todolist
-                        todolistId={tl.todolistId}
-                        title={tl.title}
-                        tasks={tl.tasks}
-                        removeTask={removeTask}
-                        removeAllTasks={removeAllTasks}
-                        addNewTask={addNewTask}
-                        changeStatusTask={changeStatusTask}
-                        activeFilter={tl.filter}
-                        changeFilter={changeFilter}
-                    />
-                })
-            }
-        </div>
+        <ToDoListWrapper>
+            <AddToDoListBlock>
+                <h2>Add a todolist</h2>
+                <AddItemForm addItem={addTodolist}/>
+            </AddToDoListBlock>
+            <ToDoLists>
+                {
+                    todoList.map(tl => {
+                        return <Todolist
+                            todolistId={tl.todolistId}
+                            title={tl.title}
+                            tasks={tl.tasks}
+                            removeTask={removeTask}
+                            removeAllTasks={removeAllTasks}
+                            addNewTask={addNewTask}
+                            changeStatusTask={changeStatusTask}
+                            activeFilter={tl.filter}
+                            changeFilter={changeFilter}
+                            deleteTodolist={deleteTodolist}
+                            changeTitleTodolist={changeTitleTodolist}
+                            changeTitleTask={changeTitleTask}
+
+                        />
+                    })
+                }
+            </ToDoLists>
+        </ToDoListWrapper>
     );
 }
 
 export default TodolistApp
+
+
+const ToDoListWrapper = styled.div`
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: lightslategray;
+`
+const AddToDoListBlock = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 100px;
+  
+  h2{
+    margin-right: 50px;
+  }
+`
+const ToDoLists = styled.ul`
+  padding: 100px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  gap: 50px;
+  flex-wrap: wrap;
+`
