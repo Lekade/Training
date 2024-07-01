@@ -1,10 +1,5 @@
-
-.error {
-  border: red 1px solid;
-}
-
 .error-message {
-  color: red;
+  color: #d32f2f;
 }
 
 .active-filter {

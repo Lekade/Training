@@ -17,14 +17,16 @@ type TodoType = {
 const TodolistApp = () => {
     const [todoList, setTodoList] = useState<Array<TodoType>>([
         {
-            todolistId: v1(), title: 'What to learn', filter: 'all',  tasks: [{idTask: v1(), title: "HTML&CSS", isDone: true},
+            todolistId: v1(), title: 'What to learn', filter: 'all',  tasks: [
+                {idTask: v1(), title: "HTML&CSS", isDone: true},
                 {idTask: v1(), title: "JS", isDone: true},
                 {idTask: v1(), title: "ReactJS", isDone: false},
                 {idTask: v1(), title: "Rest API", isDone: false},
                 {idTask: v1(), title: "GraphQL", isDone: false}]
         },
         {
-            todolistId: v1(), title: 'What to learn', filter: 'active',  tasks: [{idTask: v1(), title: "HTML&CSS", isDone: true},
+            todolistId: v1(), title: 'What to learn', filter: 'active',  tasks: [
+                {idTask: v1(), title: "HTML&CSS", isDone: true},
                 {idTask: v1(), title: "JS", isDone: true},
                 {idTask: v1(), title: "ReactJS", isDone: false}]
         },
@@ -81,7 +83,7 @@ const TodolistApp = () => {
         <ToDoListWrapper>
             <AddToDoListBlock>
                 <h2>Add a todolist</h2>
-                <AddItemForm addItem={addTodolist}/>
+                <AddItemForm addItem={addTodolist} placeholder={'Add todolist'}/>
             </AddToDoListBlock>
             <ToDoLists>
                 {
@@ -117,7 +119,7 @@ const ToDoListWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-wrap: wrap;
-  background-color: lightslategray;
+  background-color: #ECEFF7;
 `
 const AddToDoListBlock = styled.div`
   width: 100%;

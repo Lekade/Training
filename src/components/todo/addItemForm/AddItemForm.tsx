@@ -1,33 +1,54 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import Button from "../button/Button";
+import {Button, TextField} from "@mui/material";
+import styled from "styled-components";
 
 type AddItemForm = {
     addItem: (inputValue: string) => void
+    placeholder: string
 }
 
-const AddItemForm = (props: AddItemForm) => {
+const AddItemForm = ({addItem, placeholder}: AddItemForm) => {
     const [inputValue, setInputValue] = useState('')
     const [error, setError] = useState(false)
     const changeInputValue = (e: ChangeEvent<HTMLInputElement>) => {
         error && setError(false)
         setInputValue(e.currentTarget.value)
     }
-    const addItem = () => {
-        if(inputValue.trim()){
-            props.addItem(inputValue.trim())
+    const addItemHandler = () => {
+        if (inputValue.trim()) {
+            addItem(inputValue.trim())
             setInputValue('')
-        }else {
+        } else {
             setError(true)
         }
     }
-    const onInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && addItem()
+    const onInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && addItemHandler()
     return (
-        <div>
-            <input className={error ? 'error' : ''} value={inputValue} onChange={changeInputValue} onKeyDown={onInputKeyDown}/>
-            <Button onClick={addItem}>Add</Button>
+        <StyledAddItemForm>
+            <TextField
+                id="outlined-basic"
+                label={placeholder}
+                variant="outlined"
+                value={inputValue}
+                onChange={changeInputValue}
+                onKeyDown={onInputKeyDown}
+                error={!!error}
+            />
+            {/*<input className={error ? 'error' : ''} value={inputValue} onChange={changeInputValue} onKeyDown={onInputKeyDown}/>*/}
+            <Button
+                variant="contained"
+                onClick={addItemHandler}
+                sx={{
+                    height: '56px',
+                    textTransform: 'capitalize'
+                }}
+            >Add</Button>
             {error && <div className='error-message'>The field is required</div>}
-        </div>
+        </StyledAddItemForm>
     );
 };
 
 export default AddItemForm;
+const StyledAddItemForm = styled.div`
+  margin-bottom: 25px;
+`

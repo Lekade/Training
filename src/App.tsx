@@ -5,6 +5,7 @@ import {Task_Filter} from "./components/tasks/Task&Filter";
 import TodolistApp from './components/todo/TodolistApp'
 import {IndicationButton} from "./components/indicatorBtn/IndicationButton";
 import Stars from "./components/stars/Stars";
+import {AccordionContainer} from "./components/accordion/AccordionContainer";
 
 
 
@@ -21,6 +22,7 @@ function App() {
                 <Stars initialData={4}/>
                 <Stars initialData={5}/>
             </div>
+            <AccordionContainer/>
         </div>
         <div className='todo'>
             <TodolistApp/>

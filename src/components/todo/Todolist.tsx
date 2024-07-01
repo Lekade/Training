@@ -1,10 +1,12 @@
 import React from 'react';
 import {FilterValuesType} from './TodolistApp';
 import './TodolistApp.css';
-import Button from "./button/Button";
 import AddItemForm from "./addItemForm/AddItemForm";
 import styled from "styled-components";
+import muistyled from '@emotion/styled'
 import {TitleInput} from "./titleInput/TitleInput";
+import {Button, ButtonGroup, Checkbox, IconButton, Paper} from "@mui/material";
+import {Delete} from "@mui/icons-material";
 
 export type TaskType = {
     idTask: string
@@ -47,82 +49,89 @@ export function Todolist(props: TodolistPropsType) {
 
 
     return <TodolistStyled>
-        <DeleteTodolist><Button onClick={() => props.deleteTodolist(props.todolistId)}>X</Button></DeleteTodolist>
-        <TitleInput title={props.title} onChangeTitle={changeTitleTodolistHandler}/>
-        <AddItemForm addItem={addItemTasks}/>
-        <ul>
+        <TitleBlock>
+            <TitleInput title={props.title} onChangeTitle={changeTitleTodolistHandler}/>
+        </TitleBlock>
+        <AddItemForm addItem={addItemTasks} placeholder={'Add task'}/>
+        <ButtonGroup variant="contained" aria-label="Basic button group">
+            <Button
+                style={{flexGrow: 1}}
+                sx={props.activeFilter === 'all' ? {backgroundColor: '#1565c0',
+                } : {backgroundColor: '#1976D2'}}
+                onClick={() => {
+                    props.changeFilter("all", props.todolistId)
+                }}>All</Button>
+            <Button
+                style={{flexGrow: 1}}
+                sx={props.activeFilter === 'active' ? {backgroundColor: '#1565c0'} : {backgroundColor: '#1976D2'}}
+                onClick={() => {
+                    props.changeFilter("active", props.todolistId)
+                }}>Active</Button>
+            <Button
+                style={{flexGrow: 1}}
+                sx={props.activeFilter === 'completed' ? {backgroundColor: '#1565c0'} : {backgroundColor: '#1976D2'}}
+                onClick={() => {
+                    props.changeFilter("completed", props.todolistId)
+                }}>Completed</Button>
+        </ButtonGroup>
+        <Tasks>
             {
                 tasksForTodolist.map(t => {
-                    const changeTitleTaskHandler = (title: string)=>{
-                        props.changeTitleTask(title, t.idTask, props.todolistId)
-                    }
+                        const changeTitleTaskHandler = (title: string) => {
+                            props.changeTitleTask(title, t.idTask, props.todolistId)
+                        }
 
                         return (
                             <Task key={t.idTask}>
-                                <input type="checkbox"
-                                       onChange={(e) => props.changeStatusTask(t.idTask, e.currentTarget.checked, props.todolistId)}
-                                       checked={t.isDone}/>
+                                <Checkbox
+                                    onChange={(e) => props.changeStatusTask(t.idTask, e.currentTarget.checked, props.todolistId)}
+                                    checked={t.isDone}/>
                                 <TitleInput title={t.title} onChangeTitle={changeTitleTaskHandler}/>
-                                <Button onClick={() => props.removeTask(t.idTask, props.todolistId)}>X</Button>
+                                <IconButton
+                                    aria-label="delete"
+                                    onClick={() => props.removeTask(t.idTask, props.todolistId)}
+                                >
+                                    <Delete/>
+                                </IconButton>
                             </Task>
-                        )}
+                        )
+                    }
                 )
             }
-        </ul>
-        <Button onClick={() => props.removeAllTasks(props.todolistId)}>DELETE ALL TASKS</Button>
-        <div>
-            <Button className={props.activeFilter === 'all' ? 'active-filter' : ''}
-                    onClick={() => {
-                        props.changeFilter("all", props.todolistId)
-                    }}>All</Button>
-            <Button className={props.activeFilter === 'active' ? 'active-filter' : ''}
-                    onClick={() => {
-                        props.changeFilter("active", props.todolistId)
-                    }}>Active</Button>
-            <Button className={props.activeFilter === 'completed' ? 'active-filter' : ''}
-                    onClick={() => {
-                        props.changeFilter("completed", props.todolistId)
-                    }}>Completed</Button>
-        </div>
+        </Tasks>
+        <ButtonGroup size="small" aria-label="Small button group">
+            <Button onClick={() => props.removeAllTasks(props.todolistId)}>DELETE ALL TASKS</Button>
+            <Button onClick={() => props.deleteTodolist(props.todolistId)}>Delete todolist</Button>
+        </ButtonGroup>
     </TodolistStyled>
 }
 
 
-const TodolistStyled = styled.li`
-  display: block;
+const TodolistStyled = muistyled(Paper)`
+  display: flex;
+  flex-direction: column;
   min-width: 300px;
   min-height: 200px;
-  background-color: cadetblue;
+  background-color: #fff;
   padding: 30px;
   margin: 0;
   border-radius: 10px;
   position: relative;
   list-style-type: none;
-
   ul {
     padding-top: 30px;
     padding-bottom: 30px;
     padding-left: 0;
   }
 `
-const DeleteTodolist = styled.div`
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  Button {
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
-    font-size: 25px;
-    border: none;
-  }
+const Tasks = styled.ul`
+  flex-grow: 1;
 `
 
 const Task = styled.li`
   list-style-type: none;
   display: flex;
-
+`
+const  TitleBlock = styled.div`
+    margin-bottom: 25px;
 `

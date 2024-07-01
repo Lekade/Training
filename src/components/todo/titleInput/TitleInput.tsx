@@ -1,16 +1,18 @@
 import React, {ReactNode, useState} from 'react';
+import styled from "@emotion/styled";
+import {Input, TextField} from "@mui/material";
 
 type TitleInput = {
     onChangeTitle: (title: string) => void
     title: string
 }
 
-export const TitleInput = ({onChangeTitle, title}:TitleInput) => {
+export const TitleInput = ({onChangeTitle, title}: TitleInput) => {
     const [addMode, setAddMode] = useState<boolean>(false)
     const [newTitle, seNewTitle] = useState<string>(title)
 
     const onBlurInputHandler = () => {
-        if(newTitle.trim().length){
+        if (newTitle.trim().length) {
             onChangeTitle(newTitle)
             setAddMode(false)
         }
@@ -19,13 +21,24 @@ export const TitleInput = ({onChangeTitle, title}:TitleInput) => {
     return (
         <>
             {addMode
-                ? <div><input
-                    onChange={e => seNewTitle(e.currentTarget.value)}
-                    onKeyDown={e => e.key === "Enter" && onBlurInputHandler()}
-                    onBlur={onBlurInputHandler}
-                    value={newTitle}
-                    type="text"/></div>
-                : <h3 onDoubleClick={() => setAddMode(true)}>{title}</h3>}
+                ? <div>
+                    <Input
+                        placeholder="Placeholder"
+                        onChange={e => seNewTitle(e.currentTarget.value)}
+                        onKeyDown={e => e.key === "Enter" && onBlurInputHandler()}
+                        onBlur={onBlurInputHandler}
+                        value={newTitle}
+                        autoFocus
+                    />
+                </div>
+                : <Title onDoubleClick={() => setAddMode(true)}>{title}</Title>}
         </>
     );
 };
+
+
+const Title = styled.h3`
+  display: flex;
+  align-items: center;
+`
+
