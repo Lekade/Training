@@ -1,4 +1,4 @@
-import React, {useState, KeyboardEvent, useEffect} from 'react';
+import React, {useState, KeyboardEvent, useEffect, useRef} from 'react';
 import styled from "styled-components";
 
 
@@ -52,9 +52,28 @@ export const Selection = ({users, id, callBack}: SelectionType) => {
         setHoveredItem(prevState =>  selectUser)
     }, [selectUser])
 
+    // const selectorRef = useRef(null)
+    // useEffect(()=> {
+    //     if(!visibility) return
+    //
+    //     const handlerClick = (e: any) => {
+    //         if(!selectorRef.current) return
+    //         if(!selectorRef.current.contains(e.target)){
+    //             visibilityItemListHandler()
+    //         }
+    //     }
+    //     document.addEventListener('click', handlerClick)
+    //
+    //     return () => {
+    //         document.removeEventListener('click', handlerClick)
+    //     }
+    // }, [visibility])
+
 
     return (
-        <StyledSelection>
+        <StyledSelection
+            // ref={selectorRef}
+        >
             <SelectionTitle
                 onClick={() => visibilityItemListHandler(false)}
                 onKeyUp={keyUpHandler} tabIndex={0}
