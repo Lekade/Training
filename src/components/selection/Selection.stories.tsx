@@ -1,25 +1,22 @@
 import type { Meta } from '@storybook/react';
 import React from 'react';
 import {Selection, usersType} from "./Selection";
-import {v1} from "uuid";
 
 const users:usersType[] = [
-    {id: v1(), name: 'Denis'},
-    {id: v1(), name: 'Valera'},
-    {id: v1(), name: 'Igor'},
-    {id: v1(), name: 'Vlad'}
+    {id: '01', name: 'Denis'},
+    {id: '02', name: 'Valera'},
+    {id: '03', name: 'Igor'},
+    {id: '04', name: 'Vlad'}
 ]
 
 const meta: Meta = {
     title: 'Selection',
     component: Selection,
 };
+export default meta;
 
 export const SelectionContainer = () => {
     return (
-        <Selection users={users} callBack={(id)=> {}}/>
+        <Selection users={users} id={'03'} callBack={(id)=> {}}/>
     );
 };
-
-
-export default meta;
