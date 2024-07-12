@@ -38,6 +38,7 @@ export const Selection = ({users, id, callBack}: SelectionType) => {
         if(!withoutVisibility){
             setVisibility(prevState => !prevState)
         }
+        setHoveredItem(prevState =>  selectUser)
     }
 
     const keyUpHandler = (e: KeyboardEvent<HTMLDivElement>) => {
