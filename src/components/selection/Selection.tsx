@@ -20,7 +20,6 @@ type SelectionListItemType = {
     activeItemHover: boolean
 }
 
-
 export const Selection = ({users, id, callBack}: SelectionType) => {
     let initialUser = users.find(u => u.id === id)
 
@@ -46,7 +45,7 @@ export const Selection = ({users, id, callBack}: SelectionType) => {
         if(users[userIndex - 1]){e.key === "ArrowUp" && onClick(users[userIndex - 1].id, true )}
         if(users[userIndex + 1]){e.key === "ArrowDown" && onClick(users[userIndex + 1].id, true)}
         e.key === "Enter" && onClick(hoveredItem.id)
-
+        e.key === "Escape" && visibilityItemListHandler()
     }
 
     useEffect(()=> {
