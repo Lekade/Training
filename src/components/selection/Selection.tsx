@@ -2,11 +2,11 @@ import React, {useState, KeyboardEvent, useEffect, useRef} from 'react';
 import styled from "styled-components";
 
 
-export type usersType = {
-    id:string, name:string
+export type itemsType = {
+    id:string, [key: string]:string
 }
 type SelectionType = {
-    users: usersType[]
+    items: itemsType[]
     id: string
     callBack: (id:string) => void
 }
@@ -20,16 +20,17 @@ type SelectionListItemType = {
     activeItemHover: boolean
 }
 
-export const Selection = ({users, id, callBack}: SelectionType) => {
-    let initialUser = users.find(u => u.id === id)
+export const Selection = ({items, id, callBack}: SelectionType) => {
+    console.log(items)
+    let initialItems = items.find(i => i.id === id)
 
-    const [selectUser, setSelectUser] = useState<usersType>(initialUser ? initialUser : users[0])
+    const [selectItem, setSelectItem] = useState<itemsType>(initialItems ? initialItems : items[0])
     const [visibility, setVisibility] = useState<boolean>(false)
-    const [hoveredItem, setHoveredItem] = useState(selectUser)
+    const [hoveredItem, setHoveredItem] = useState(selectItem)
 
     const onClick = (id: string, withoutVisibility?: boolean) => {
         callBack(id)
-        setSelectUser(prevState =>  users.filter(u => u.id === id)[0])
+        setSelectItem(prevState =>  items.filter(i => i.id === id)[0])
         visibilityItemListHandler(withoutVisibility)
     }
 
@@ -37,20 +38,20 @@ export const Selection = ({users, id, callBack}: SelectionType) => {
         if(!withoutVisibility){
             setVisibility(prevState => !prevState)
         }
-        setHoveredItem(prevState =>  selectUser)
+        setHoveredItem(prevState =>  selectItem)
     }
 
     const keyUpHandler = (e: KeyboardEvent<HTMLDivElement>) => {
-        let userIndex = users.indexOf(hoveredItem)
-        if(users[userIndex - 1]){e.key === "ArrowUp" && onClick(users[userIndex - 1].id, true )}
-        if(users[userIndex + 1]){e.key === "ArrowDown" && onClick(users[userIndex + 1].id, true)}
+        let itemIndex = items.indexOf(hoveredItem)
+        if(items[itemIndex - 1]){e.key === "ArrowUp" && onClick(items[itemIndex - 1].id, true )}
+        if(items[itemIndex + 1]){e.key === "ArrowDown" && onClick(items[itemIndex + 1].id, true)}
         e.key === "Enter" && onClick(hoveredItem.id)
         e.key === "Escape" && visibilityItemListHandler()
     }
 
     useEffect(()=> {
-        setHoveredItem(prevState =>  selectUser)
-    }, [selectUser])
+        setHoveredItem(prevState =>  selectItem)
+    }, [selectItem])
 
     // const selectorRef = useRef(null)
     // useEffect(()=> {
@@ -77,18 +78,18 @@ export const Selection = ({users, id, callBack}: SelectionType) => {
             <SelectionTitle
                 onClick={() => visibilityItemListHandler(false)}
                 onKeyUp={keyUpHandler} tabIndex={0}
-            >{selectUser.name ? selectUser.name : ''}</SelectionTitle>
+            >{selectItem.name ? selectItem.name : ''}</SelectionTitle>
             <SelectionList visibility={visibility ? 'visible' : 'hidden'}>
                 {
-                    users.length && users.map(u =>
+                    items.length && items.map(i =>
                         <SelectionListItem
-                            key={u.id}
+                            key={i.id}
                             tabIndex={1}
-                            activeItemHover={hoveredItem.id === u.id}
-                            onMouseOver={() => setHoveredItem(u)}
-                            onClick={(e) =>  onClick(u.id)}
+                            activeItemHover={hoveredItem.id === i.id}
+                            onMouseOver={() => setHoveredItem(i)}
+                            onClick={(e) =>  onClick(i.id)}
                         >
-                            {u.name}
+                            {i.name}
                         </SelectionListItem>)
                 }
             </SelectionList>

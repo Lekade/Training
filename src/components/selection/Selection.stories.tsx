@@ -1,8 +1,8 @@
 import type { Meta } from '@storybook/react';
 import React from 'react';
-import {Selection, usersType} from "./Selection";
+import {Selection, itemsType} from "./Selection";
 
-const users:usersType[] = [
+const users:itemsType[] = [
     {id: '01', name: 'Denis'},
     {id: '02', name: 'Valera'},
     {id: '03', name: 'Igor'},
@@ -15,8 +15,8 @@ const meta: Meta = {
 };
 export default meta;
 
-export const SelectionContainer = () => {
+export const SelectionComponent = () => {
     return (
-        <Selection users={users} id={'03'} callBack={(id)=> {}}/>
+        <Selection items={users} id={'03'} callBack={(id)=> {}}/>
     );
 };
