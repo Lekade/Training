@@ -1,13 +1,13 @@
-import React, {useState, KeyboardEvent, useEffect, useRef} from 'react';
+import React, {useState, KeyboardEvent, useEffect} from 'react';
 import styled from "styled-components";
 
 
 export type itemsType = {
-    id:string, [key: string]:string
+    id:string, name:string
 }
 type SelectionType = {
     items: itemsType[]
-    id: string
+    id?: string
     callBack: (id:string) => void
 }
 type visibility = 'visible' | 'hidden'
@@ -21,7 +21,6 @@ type SelectionListItemType = {
 }
 
 export const Selection = ({items, id, callBack}: SelectionType) => {
-    console.log(items)
     let initialItems = items.find(i => i.id === id)
 
     const [selectItem, setSelectItem] = useState<itemsType>(initialItems ? initialItems : items[0])
@@ -29,9 +28,9 @@ export const Selection = ({items, id, callBack}: SelectionType) => {
     const [hoveredItem, setHoveredItem] = useState(selectItem)
 
     const onClick = (id: string, withoutVisibility?: boolean) => {
-        callBack(id)
         setSelectItem(prevState =>  items.filter(i => i.id === id)[0])
         visibilityItemListHandler(withoutVisibility)
+        callBack(id)
     }
 
     const visibilityItemListHandler = (withoutVisibility?: boolean) => {
@@ -86,7 +85,7 @@ export const Selection = ({items, id, callBack}: SelectionType) => {
                             key={i.id}
                             tabIndex={1}
                             activeItemHover={hoveredItem.id === i.id}
-                            onMouseOver={() => setHoveredItem(i)}
+                            onMouseOver={() => setHoveredItem(prevState =>  i)}
                             onClick={(e) =>  onClick(i.id)}
                         >
                             {i.name}
