@@ -1,13 +1,20 @@
-import React, {useState} from 'react';
+import React, {useReducer} from 'react';
 import './TodolistApp.css';
 import {TaskType, Todolist} from './Todolist';
 import {v1} from "uuid";
 import AddItemForm from "./addItemForm/AddItemForm";
 import styled from "styled-components";
+import {
+    addTaskAC,
+    addTodolistAC, changeFilterTodolistAC,
+    changeStatusTaskAC, changeTitleTaskAC, changeTitleTodolistAC,
+    deleteAllTaskAC, deleteTaskAC, deleteTodolistAC,
+    globalReduser,
+} from "./redusers/global-reduser";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
-type TodoType = {
+export type TodoType = {
     todolistId: string
     title: string
     filter: FilterValuesType
@@ -15,7 +22,7 @@ type TodoType = {
 }
 
 const TodolistApp = () => {
-    const [todoList, setTodoList] = useState<Array<TodoType>>([
+    const [todolistsState, dispatch] = useReducer( globalReduser, [
         {
             todolistId: v1(), title: 'What to learn', filter: 'all',  tasks: [
                 {idTask: v1(), title: "HTML&CSS", isDone: true},
@@ -37,46 +44,34 @@ const TodolistApp = () => {
         }
     ])
 
-    function addNewTask(newTaskTitle: string, todolistId: string) {
-        const newTask = {
-            idTask: v1(),
-            title: newTaskTitle,
-            isDone: false
-        }
-        setTodoList(todoList.map(tl => tl.todolistId === todolistId ? {...tl, tasks: [newTask, ...tl.tasks]} : tl))
-    }
-
-    function changeStatusTask(idTask: string, isDone: boolean, todolistId: string) {
-        setTodoList(todoList.map(tl => tl.todolistId === todolistId ? {...tl, tasks: tl.tasks.map(t => t.idTask  === idTask ? {...t, isDone : isDone } : t )} : tl))
-    }
-
-    function removeTask(idTask: string, todolistId: string, ) {
-        setTodoList(todoList.map(tl => tl.todolistId === todolistId ? {...tl, tasks: tl.tasks.filter(t => t.idTask  !== idTask)} : tl))
-    }
-
-    function removeAllTasks(todolistId: string) {
-        setTodoList(todoList.map(tl => tl.todolistId === todolistId ? {...tl, tasks: []} : tl))
-    }
-
-    function changeFilter(value:FilterValuesType, todolistId:string){
-        setTodoList(todoList.map(tl => tl.todolistId === todolistId ? {...tl, filter: value} : tl))
-    }
-    function addTodolist(inputValue:string)  {
-        const todolistItem :TodoType = {
-            todolistId: v1(), title: inputValue, filter: 'all',  tasks: []
-        }
-        setTodoList([...todoList, todolistItem])
+    function addTodolist(title:string)  {
+        dispatch(addTodolistAC(title))
     }
     function deleteTodolist(todolistId: string){
-        setTodoList(todoList.filter(tl => tl.todolistId !== todolistId))
+        dispatch(deleteTodolistAC(todolistId))
     }
     function changeTitleTodolist(title:string, todolistId: string){
-        setTodoList(todoList.map(tl => tl.todolistId === todolistId ? {...tl, title: title} : tl))
+        dispatch(changeTitleTodolistAC(todolistId, title))
+    }
+    function changeFilter(filter:FilterValuesType, todolistId:string){
+        dispatch(changeFilterTodolistAC(todolistId, filter))
+    }
+
+
+    function addNewTask(title: string, todolistId: string) {
+        dispatch(addTaskAC(todolistId, title))
+    }
+    function removeTask(idTask: string, todolistId: string, ) {
+        dispatch(deleteTaskAC(todolistId, idTask))
+    }
+    function changeStatusTask(idTask: string, isDone: boolean, todolistId: string) {
+        dispatch(changeStatusTaskAC(todolistId, idTask, isDone))
     }
     function changeTitleTask(title:string, idTask: string, todolistId: string){
-        setTodoList(todoList.map(tl => tl.todolistId === todolistId
-            ? {...tl, tasks: tl.tasks.map(task => task.idTask === idTask
-                    ? {...task, title:title}: task)}: tl))
+        dispatch(changeTitleTaskAC(todolistId, idTask, title))
+    }
+    function removeAllTasks(todolistId: string) {
+        dispatch(deleteAllTaskAC(todolistId))
     }
 
     return (
@@ -87,7 +82,7 @@ const TodolistApp = () => {
             </AddToDoListBlock>
             <ToDoLists>
                 {
-                    todoList.map(tl => {
+                    todolistsState.map(tl => {
                         return <Todolist
                             todolistId={tl.todolistId}
                             title={tl.title}
