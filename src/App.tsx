@@ -6,7 +6,8 @@ import TodolistApp from './components/todo/TodolistApp'
 import {IndicationButton} from "./components/indicatorBtn/IndicationButton";
 import Stars from "./components/stars/Stars";
 import {AccordionContainer} from "./components/accordion/AccordionContainer";
-
+import {Provider} from "react-redux";
+import {store} from "./components/todo/Store/store";
 
 
 function App() {
@@ -16,17 +17,21 @@ function App() {
             <Task_Filter/>
             <IndicationButton/>
             <div>
-                <Stars initialData={1}/>
-                <Stars initialData={2}/>
-                <Stars initialData={3}/>
-                <Stars initialData={4}/>
-                <Stars initialData={5}/>
+                <Stars key={'1'} initialData={1}/>
+                <Stars key={'2'} initialData={2}/>
+                <Stars key={'3'} initialData={3}/>
+                <Stars key={'4'} initialData={4}/>
+                <Stars key={'5'} initialData={5}/>
             </div>
             <AccordionContainer/>
         </div>
         <div className='todo'>
-            <TodolistApp/>
+            <Provider store={store}>
+                <TodolistApp/>
+            </Provider>
         </div>
+
+
     </div>
 }
 
