@@ -1,4 +1,4 @@
-import {FilterValuesType, TodoType} from "../TodolistApp";
+import {FilterValuesType} from "../TodolistApp";
 import {v1} from "uuid";
 
 export type AddTodolistAT = ReturnType<typeof addTodolistAC>
@@ -22,7 +22,15 @@ type ActionType =
     | ChangeStatusTaskAT
     | DeleteAllTasksAT
 
-export const globalReduser = (state: TodoType[], action: ActionType): TodoType[] => {
+export type TodoType = {
+    todolistId: string
+    title:string
+    filter: FilterValuesType
+    tasks: {idTask: string, title: string, isDone: boolean}[]
+
+}
+
+export const globalReducer = (state: TodoType[], action: ActionType): TodoType[] => {
     switch (action.type) {
         case 'ADD-TODOLIST': {
             const {title} = action.payload
