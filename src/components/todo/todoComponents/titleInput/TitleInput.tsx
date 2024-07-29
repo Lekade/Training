@@ -1,6 +1,6 @@
-import React, {ReactNode, useState} from 'react';
+import React, {useState} from 'react';
 import styled from "@emotion/styled";
-import {Input, TextField} from "@mui/material";
+import {Input} from "@mui/material";
 
 type TitleInput = {
     onChangeTitle: (title: string) => void
