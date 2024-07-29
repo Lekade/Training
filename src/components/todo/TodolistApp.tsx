@@ -1,78 +1,60 @@
-import React, {useReducer} from 'react';
+import React from 'react';
 import './TodolistApp.css';
-import {TaskType, Todolist} from './Todolist';
-import {v1} from "uuid";
-import AddItemForm from "./addItemForm/AddItemForm";
+import {Todolist} from './todoComponents/todolist/Todolist';
+import AddItemForm from "./todoComponents/addItemForm/AddItemForm";
 import styled from "styled-components";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./Store/store";
 import {
-    addTaskAC,
-    addTodolistAC, changeFilterTodolistAC,
-    changeStatusTaskAC, changeTitleTaskAC, changeTitleTodolistAC,
-    deleteAllTaskAC, deleteTaskAC, deleteTodolistAC,
-    globalReduser,
-} from "./redusers/global-reduser";
+    addTodolistAC,
+    changeFilterTodolistAC,
+    changeTitleTodolistAC,
+    deleteTodolistAC
+} from "./Store/todolists-reducer";
+import {addTaskAC, removeAllTaskAC} from "./Store/tasks-reducer";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
-export type TodoType = {
+export type TodolistType = {
     todolistId: string
     title: string
     filter: FilterValuesType
-    tasks: Array<TaskType>
+}
+export type TaskType = {
+    taskId: string
+    title: string
+    isDone: boolean
+}
+export type TaskStateType = {
+    [todolistId: string]: TaskType[]
 }
 
 const TodolistApp = () => {
-    const [todolistsState, dispatch] = useReducer( globalReduser, [
-        {
-            todolistId: v1(), title: 'What to learn', filter: 'all',  tasks: [
-                {idTask: v1(), title: "HTML&CSS", isDone: true},
-                {idTask: v1(), title: "JS", isDone: true},
-                {idTask: v1(), title: "ReactJS", isDone: false},
-                {idTask: v1(), title: "Rest API", isDone: false},
-                {idTask: v1(), title: "GraphQL", isDone: false}]
-        },
-        {
-            todolistId: v1(), title: 'What to learn', filter: 'active',  tasks: [
-                {idTask: v1(), title: "HTML&CSS", isDone: true},
-                {idTask: v1(), title: "JS", isDone: true},
-                {idTask: v1(), title: "ReactJS", isDone: false}]
-        },
-        {
-            todolistId: v1(), title: 'What to learn', filter: 'completed',  tasks: [
-                {idTask: v1(), title: "JS", isDone: true},
-                {idTask: v1(), title: "GraphQL", isDone: false}]
-        }
-    ])
+    const todolists = useSelector<AppRootStateType, TodolistType[]>(state => state.todolists)
+    const dispatch = useDispatch()
 
-    function addTodolist(title:string)  {
+    function addTodolist(title: string) {
         dispatch(addTodolistAC(title))
     }
-    function deleteTodolist(todolistId: string){
+
+    function deleteTodolist(todolistId: string) {
         dispatch(deleteTodolistAC(todolistId))
     }
-    function changeTitleTodolist(title:string, todolistId: string){
+
+    function changeTitleTodolist(title: string, todolistId: string) {
         dispatch(changeTitleTodolistAC(todolistId, title))
     }
-    function changeFilter(filter:FilterValuesType, todolistId:string){
+
+    function changeFilter(filter: FilterValuesType, todolistId: string) {
         dispatch(changeFilterTodolistAC(todolistId, filter))
     }
-
-
-    function addNewTask(title: string, todolistId: string) {
+    function addNewTask(todolistId: string, title: string) {
         dispatch(addTaskAC(todolistId, title))
     }
-    function removeTask(idTask: string, todolistId: string, ) {
-        dispatch(deleteTaskAC(todolistId, idTask))
-    }
-    function changeStatusTask(idTask: string, isDone: boolean, todolistId: string) {
-        dispatch(changeStatusTaskAC(todolistId, idTask, isDone))
-    }
-    function changeTitleTask(title:string, idTask: string, todolistId: string){
-        dispatch(changeTitleTaskAC(todolistId, idTask, title))
-    }
     function removeAllTasks(todolistId: string) {
-        dispatch(deleteAllTaskAC(todolistId))
+        dispatch(removeAllTaskAC(todolistId))
     }
+
 
     return (
         <ToDoListWrapper>
@@ -82,21 +64,17 @@ const TodolistApp = () => {
             </AddToDoListBlock>
             <ToDoLists>
                 {
-                    todolistsState.map(tl => {
+                    todolists.map(tl => {
                         return <Todolist
+                            key={tl.todolistId}
                             todolistId={tl.todolistId}
                             title={tl.title}
-                            tasks={tl.tasks}
-                            removeTask={removeTask}
-                            removeAllTasks={removeAllTasks}
-                            addNewTask={addNewTask}
-                            changeStatusTask={changeStatusTask}
                             activeFilter={tl.filter}
-                            changeFilter={changeFilter}
                             deleteTodolist={deleteTodolist}
                             changeTitleTodolist={changeTitleTodolist}
-                            changeTitleTask={changeTitleTask}
-
+                            changeFilter={changeFilter}
+                            addNewTask={addNewTask}
+                            removeAllTasks={removeAllTasks}
                         />
                     })
                 }
@@ -122,8 +100,8 @@ const AddToDoListBlock = styled.div`
   justify-content: center;
   align-items: center;
   padding-top: 100px;
-  
-  h2{
+
+  h2 {
     margin-right: 50px;
   }
 `
