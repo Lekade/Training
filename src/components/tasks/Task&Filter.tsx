@@ -70,7 +70,7 @@ export const Task_Filter = () => {
             <div>
                 <ul>
                     <h1>Many</h1>
-                    {filterMany.map(m => <li>
+                    {filterMany.map((m, i) => <li key={i}>
                         <div><span>{m.banknots}</span><b> : {m.value}</b> <span>number banknote : </span> <span>{m.number}</span> </div>
 
                     </li>)}
