@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 import {Checkbox, IconButton} from "@mui/material";
 import {TitleInput} from "../titleInput/TitleInput";
 import {Delete} from "@mui/icons-material";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../Store/store";
-import {FilterValuesType, TaskStateType, TaskType} from "../../TodolistApp";
+import {FilterValuesType, TaskType} from "../../TodolistApp";
 import {changeStatusTaskAC, changeTitleTaskAC, removeTaskAC} from "../../Store/tasks-reducer";
 
 
@@ -14,28 +14,31 @@ type TasksPropsType = {
     activeFilter: FilterValuesType
 }
 
-export const Tasks = ({todolistId, activeFilter}:TasksPropsType) => {
-    const tasks = useSelector<AppRootStateType,  TaskStateType>(state => state.tasks)
+export const Tasks = memo(({todolistId, activeFilter}:TasksPropsType) => {
+    const tasks = useSelector<AppRootStateType,  TaskType[]>(state => state.tasks[todolistId])
     const dispatch = useDispatch()
 
-    function removeTask(taskId: string) {
+    const removeTask = useCallback((taskId: string) => {
         dispatch(removeTaskAC(todolistId, taskId))
-    }
-    function changeStatusTask(idTask: string, isDone: boolean) {
-        dispatch(changeStatusTaskAC(todolistId, idTask, isDone))
-    }
-    function changeTitleTask(title:string, taskId: string){
+    }, [dispatch])
+    const changeStatusTask = useCallback((taskId: string, isDone: boolean) => {
+        dispatch(changeStatusTaskAC(todolistId, taskId, isDone))
+    }, [dispatch])
+    const changeTitleTask = useCallback((title:string, taskId: string) =>{
         dispatch(changeTitleTaskAC(todolistId, taskId, title))
-    }
+    }, [dispatch])
 
-    let tasksForTodolist: TaskType[] = tasks[todolistId];
+    let tasksForTodolist:TaskType[] = useMemo(() => {
+        if (activeFilter === "active") {
+            return  tasks.filter(t => !t.isDone);
+        }
+        if (activeFilter === "completed") {
+            return  tasks.filter(t => t.isDone);
+        }
+        return tasks
 
-    if (activeFilter === "active") {
-        tasksForTodolist = tasks[todolistId].filter(t => !t.isDone);
-    }
-    if (activeFilter === "completed") {
-        tasksForTodolist = tasks[todolistId].filter(t => t.isDone);
-    }
+    }, [activeFilter, tasks])
+
 
     return (
         <StyledTasks>
@@ -60,7 +63,7 @@ export const Tasks = ({todolistId, activeFilter}:TasksPropsType) => {
             }
         </StyledTasks>
     );
-};
+});
 
 
 const StyledTasks = styled.ul`
