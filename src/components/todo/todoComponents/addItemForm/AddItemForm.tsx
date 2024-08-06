@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 import {Button, TextField} from "@mui/material";
 import styled from "styled-components";
 
@@ -7,7 +7,7 @@ type AddItemForm = {
     placeholder: string
 }
 
-const AddItemForm = ({addItem, placeholder}: AddItemForm) => {
+export const AddItemForm = memo(({addItem, placeholder}: AddItemForm) => {
     const [inputValue, setInputValue] = useState('')
     const [error, setError] = useState(false)
     const changeInputValue = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,9 +46,8 @@ const AddItemForm = ({addItem, placeholder}: AddItemForm) => {
             {error && <div className='error-message'>The field is required</div>}
         </StyledAddItemForm>
     );
-};
+});
 
-export default AddItemForm;
 const StyledAddItemForm = styled.div`
   margin-bottom: 25px;
 `

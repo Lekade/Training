@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
 import styled from "@emotion/styled";
 import {Input} from "@mui/material";
 
@@ -7,7 +7,7 @@ type TitleInput = {
     title: string
 }
 
-export const TitleInput = ({onChangeTitle, title}: TitleInput) => {
+export const TitleInput = memo(({onChangeTitle, title}: TitleInput) => {
     const [addMode, setAddMode] = useState<boolean>(false)
     const [newTitle, seNewTitle] = useState<string>(title)
 
@@ -34,7 +34,7 @@ export const TitleInput = ({onChangeTitle, title}: TitleInput) => {
                 : <Title onDoubleClick={() => setAddMode(true)}>{title}</Title>}
         </>
     );
-};
+});
 
 
 const Title = styled.h3`
