@@ -1,17 +1,13 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import './TodolistApp.css';
 import {Todolist} from './todoComponents/todolist/Todolist';
-import AddItemForm from "./todoComponents/addItemForm/AddItemForm";
+import {AddItemForm} from "./todoComponents/addItemForm/AddItemForm";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./Store/store";
 import {
     addTodolistAC,
-    changeFilterTodolistAC,
-    changeTitleTodolistAC,
-    deleteTodolistAC
 } from "./Store/todolists-reducer";
-import {addTaskAC, removeAllTaskAC} from "./Store/tasks-reducer";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
@@ -33,29 +29,9 @@ const TodolistApp = () => {
     const todolists = useSelector<AppRootStateType, TodolistType[]>(state => state.todolists)
     const dispatch = useDispatch()
 
-    function addTodolist(title: string) {
+    const addTodolist = useCallback( (title: string) => {
         dispatch(addTodolistAC(title))
-    }
-
-    function deleteTodolist(todolistId: string) {
-        dispatch(deleteTodolistAC(todolistId))
-    }
-
-    function changeTitleTodolist(title: string, todolistId: string) {
-        dispatch(changeTitleTodolistAC(todolistId, title))
-    }
-
-    function changeFilter(filter: FilterValuesType, todolistId: string) {
-        dispatch(changeFilterTodolistAC(todolistId, filter))
-    }
-    function addNewTask(todolistId: string, title: string) {
-        dispatch(addTaskAC(todolistId, title))
-    }
-    function removeAllTasks(todolistId: string) {
-        dispatch(removeAllTaskAC(todolistId))
-    }
-
-
+    }, [dispatch])
     return (
         <ToDoListWrapper>
             <AddToDoListBlock>
@@ -67,14 +43,7 @@ const TodolistApp = () => {
                     todolists.map(tl => {
                         return <Todolist
                             key={tl.todolistId}
-                            todolistId={tl.todolistId}
-                            title={tl.title}
-                            activeFilter={tl.filter}
-                            deleteTodolist={deleteTodolist}
-                            changeTitleTodolist={changeTitleTodolist}
-                            changeFilter={changeFilter}
-                            addNewTask={addNewTask}
-                            removeAllTasks={removeAllTasks}
+                            todolist={tl}
                         />
                     })
                 }
