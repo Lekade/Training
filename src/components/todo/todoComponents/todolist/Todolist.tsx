@@ -1,67 +1,77 @@
-import React from 'react';
-import {FilterValuesType} from '../../TodolistApp';
+import React, {memo, useCallback} from 'react';
+import {TodolistType} from '../../TodolistApp';
 import '../../TodolistApp.css';
-import AddItemForm from "../addItemForm/AddItemForm";
+import {AddItemForm} from "../addItemForm/AddItemForm";
 import styled from "styled-components";
 import muistyled from '@emotion/styled'
 import {TitleInput} from "../titleInput/TitleInput";
 import {Button, ButtonGroup, Paper} from "@mui/material";
 import {Tasks} from "../tasks/Tasks";
+import {useDispatch} from "react-redux";
+import {addTaskAC, removeAllTaskAC} from "../../Store/tasks-reducer";
+import {changeFilterTodolistAC, changeTitleTodolistAC, deleteTodolistAC} from "../../Store/todolists-reducer";
+import {MemoButton} from "../button/MemoButton";
 
 
 type TodolistPropsType = {
-    todolistId: string
-    title: string
-    activeFilter: FilterValuesType
-    changeFilter: (value: FilterValuesType, todolistId: string) => void
-    deleteTodolist: (todolistId: string) => void
-    changeTitleTodolist: (title: string, todolistId: string) => void
-    removeAllTasks: (todolistId: string) => void
-    addNewTask: (inputValue: string, todolistId: string) => void
+    todolist: TodolistType
 }
 
-export function Todolist(props: TodolistPropsType) {
+export const Todolist = memo(({todolist}: TodolistPropsType) => {
+    const {todolistId, title, filter} = todolist
+    const dispatch = useDispatch()
 
-    const addItemTasks = (inputValue: string) => {
-        props.addNewTask(props.todolistId, inputValue.trim())
-    }
-    const changeTitleTodolistHandler = (title: string) => {
-        props.changeTitleTodolist(title, props.todolistId)
-    }
+
+    const addTask = useCallback(( title: string) => {
+        dispatch(addTaskAC(todolistId, title))
+    }, [dispatch])
+    const removeAllTasks = useCallback(() => {
+        dispatch(removeAllTaskAC(todolistId))
+    }, [dispatch])
+    const deleteTodolist = useCallback(() => {
+        dispatch(deleteTodolistAC(todolistId))
+    }, [dispatch])
+    const changeTitleTodolist = useCallback((title: string) => {
+        dispatch(changeTitleTodolistAC(todolistId, title))
+    }, [dispatch])
+    const onAllFilter = useCallback(() => {
+        dispatch(changeFilterTodolistAC(todolistId, 'all'))
+    }, [dispatch, filter])
+    const onActiveFilter = useCallback(() => {
+        dispatch(changeFilterTodolistAC(todolistId, 'active'))
+    }, [dispatch, filter])
+    const onCompletedFilter = useCallback ( () => {
+        dispatch(changeFilterTodolistAC(todolistId, 'completed'))
+    }, [dispatch, filter])
+
+
 
     return <TodolistStyled>
         <TitleBlock>
-            <TitleInput title={props.title} onChangeTitle={changeTitleTodolistHandler}/>
+            <TitleInput title={title} onChangeTitle={changeTitleTodolist}/>
         </TitleBlock>
-        <AddItemForm addItem={addItemTasks} placeholder={'Add task'}/>
+        <AddItemForm addItem={addTask} placeholder={'Add task'}/>
         <ButtonGroup variant="contained" aria-label="Basic button group">
-            <Button
+            <MemoButton
                 style={{flexGrow: 1}}
-                sx={props.activeFilter === 'all' ? {backgroundColor: '#1565c0',
-                } : {backgroundColor: '#1976D2'}}
-                onClick={() => {
-                    props.changeFilter("all", props.todolistId)
-                }}>All</Button>
-            <Button
+                variant={filter === 'all' ? "outlined" : "contained"}
+                onClick={onAllFilter}>All</MemoButton>
+            <MemoButton
                 style={{flexGrow: 1}}
-                sx={props.activeFilter === 'active' ? {backgroundColor: '#1565c0'} : {backgroundColor: '#1976D2'}}
-                onClick={() => {
-                    props.changeFilter("active", props.todolistId)
-                }}>Active</Button>
-            <Button
+                variant={filter === 'active' ? "outlined" : "contained"}
+                onClick={onActiveFilter}>Active</MemoButton>
+            <MemoButton
                 style={{flexGrow: 1}}
-                sx={props.activeFilter === 'completed' ? {backgroundColor: '#1565c0'} : {backgroundColor: '#1976D2'}}
-                onClick={() => {
-                    props.changeFilter("completed", props.todolistId)
-                }}>Completed</Button>
+                variant={filter === 'completed' ? "outlined" : "contained"}
+                onClick={onCompletedFilter}>Completed</MemoButton>
         </ButtonGroup>
-        <Tasks todolistId={props.todolistId} activeFilter={props.activeFilter} />
+        <Tasks todolistId={todolistId} activeFilter={filter} />
         <ButtonGroup size="small" aria-label="Small button group">
-            <Button onClick={() => props.removeAllTasks(props.todolistId)}>DELETE ALL TASKS</Button>
-            <Button onClick={() => props.deleteTodolist(props.todolistId)}>Delete todolist</Button>
+            <Button onClick={removeAllTasks}>DELETE ALL TASKS</Button>
+            <Button onClick={deleteTodolist}>Delete todolist</Button>
         </ButtonGroup>
     </TodolistStyled>
-}
+})
 
 
 const TodolistStyled = muistyled(Paper)`
