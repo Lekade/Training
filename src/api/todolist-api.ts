@@ -14,13 +14,13 @@ export const todolistApi = {
         return  instance.get<TodolistType[]>('/todo-lists')
     },
     createTodo(title: string){
-        return instance.post<ResponseType<{item: TodolistType}>>('https://social-network.samuraijs.com/api/1.1/todo-lists', {title})
+        return instance.post<ResponseType<{item: TodolistType}>>('/todo-lists', {title})
     },
     deleteTodo(todolistId: string){
-        return  instance.delete<ResponseType>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistId}`)
+        return  instance.delete<ResponseType>(`/todo-lists/${todolistId}`)
     },
     updateTodo(todolistId: string, title: string){
-        return instance.put<ResponseType>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistId}`, {title})
+        return instance.put<ResponseType>(`/todo-lists/${todolistId}`, {title})
     }
 }
 
